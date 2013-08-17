@@ -574,7 +574,7 @@ void PTable::print_table(){
     print_table(true);
 }
 
-//either prints in log or non-log domain
+//either prints in log or non-log domain (log when exponen=false)
 void PTable::print_table(bool exponen){
     for (int s1=0;s1<S1;s1++){
         cerr<<"S1 "<<s1<<endl;
