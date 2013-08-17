@@ -86,7 +86,7 @@ class Crf_Ed{
 };
 
 class Data_Element{
-    // A single strin pair
+    // A single string pair
     public:
         int I;  //length of first word
         int J;  //length of second word
