@@ -4,7 +4,6 @@
 #include <math.h>
 #include <iostream>
 #include <set>
-//#define endl "\n"
 class Data_Element;
 class Transition;
 
@@ -14,8 +13,7 @@ using std::string;
 using std::pair;
 
 class PTable{
-    /* PTable to store values for forward-backward algorithm
-     */
+    // PTable to store values for forward-backward algorithm
     public: 
         PTable(int initial_value,int max_I,int max_J,int max_S0,int max_S1);
         void reset();
@@ -30,7 +28,8 @@ class PTable{
         int get_max_I(){return I;}
         int get_max_J(){return J;}
     private:
-        vector<vector<vector<vector<double> > > > table;   //accessed: table[i][j][s0][s1] 
+        vector<vector<vector<vector<double> > > > table;  //accessed:
+                                                          //table[i][j][s0][s1] 
         double initial_val;
         int I;
         int J;
@@ -39,16 +38,18 @@ class PTable{
 };
 
 class Crf_Ed{
-    /* Conditional Random Field Edit distance inference engine
-     */
+    // Conditional Random Field Edit distance inference engine
     public:
-        void evaluate(int y,double & z0, double & z1);  //fills forward table to evaluate params on current example
+        void evaluate(int y,double & z0, double & z1);  //fills forward table 
+                                                        //to evaluate params 
+                                                        //on current example
         void fill_tables();
         void set_words(Data_Element*);
         void fill_table_ll();
         double get_ll(int);
         double get_accuracy(int);
-        void get_derivs(int,vector<double> & derivs);    //adds derivatives to vector
+        void get_derivs(int,vector<double> & derivs);    //adds derivatives to 
+                                                         //vector
         void init_params();
         vector<double>* get_params();
         Crf_Ed(int,int,int,int);
@@ -79,23 +80,26 @@ class Crf_Ed{
         vector<int> vij;        //stores current features
         int vij_length;          //number of active features
         double get_feature_sum_ij(int i,int j,int ps,int s,int e);
-        bool right_transducer(int z,int state); //helper function to see if state belong to match or mismach transducer
+        bool right_transducer(int z,int state); //helper function to see if 
+                                                //state belong to match or 
+                                                //mismach transducer
 };
 
 class Data_Element{
-    /* A single word pair
-     */
+    // A single strin pair
     public:
         int I;  //length of first word
         int J;  //length of second word
-        vector<int>* get_features(int i,int j); //gets features active for i,j posisions in words
+        vector<int>* get_features(int i,int j); //gets features active for i,j 
+                                                //posisions in words
         Data_Element(string w1,string w2,set<int>&);
         Data_Element(vector<vector<vector<int> > >);
         Data_Element(int I,int J,string list_of_features);
         string get_w1();
         string get_w2();
     private:
-        vector<vector<vector<int> > > features; //features. accessed with features[i][j] 
+        vector<vector<vector<int> > > features; //features. accessed with 
+                                                //features[i][j] 
         string w1;
         string w2;
 };
