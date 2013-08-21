@@ -143,8 +143,33 @@ void log_options(){
     _log<<"numepochs"<< _numepochs<<endl;
 }
 
+//prints usage
+void usage(){
+    cerr << "usage: learning [options]" << endl;
+    cerr << "options:" << endl;
+    cerr << "-S     : Score the string pairs in infileA and infileB" << endl;
+    cerr << "-iM infileA   : Sets the input file for class A" << endl;
+    cerr << "-iN infileB   : Sets the input file for class B" << endl;
+    cerr << "-iV valfileA  : Sets the validation file for class A" << endl;
+    cerr << "-iW valfileB  : Sets the validation file for class B" << endl;
+    cerr << "-iF featfile  : Sets the file with a newline separated" << endl;
+    cerr << "                list of features to include" << endl;
+    cerr << "-oL logfile   : Sets the file where logs are written" << endl;
+    cerr << "-oP paramfile : Sets the file where parameters are stored" << endl;
+    cerr << "-lL regparam  : Sets the regularization parameter to " << endl;
+    cerr << "                regparam. Default is 0 (no regularization)"<< endl;
+    cerr << "-lE ep        : Trains model for maximum of ep epochs" << endl;
+    cerr << "-lG           : Train model (using lm-bfgs)" << endl;
+    cerr << "-mM maxl      : Only include example strings of length up" << endl;
+    cerr << "                maxl. Default is -1 (include all)" << endl;
+    exit(1);
+}
+
 //read and set command line options
 void setOptions(int argc,char* argv[]){
+    if (argc <= 1){
+        usage();
+    }
     _uselbfgs = false;
     for(int i=1;i<argc;i++){
         switch(argv[i][1]){
@@ -212,7 +237,7 @@ void setOptions(int argc,char* argv[]){
     }
 }
                     
-//the function that is passed to optimization routing. calculate opjective
+//the function that is passed to optimization routine. calculate opjective
 //function (negative log-likelihood) and its derivative
 void function_grad(const real_1d_array &x,
         double &func,real_1d_array &grad,void *ptr){
@@ -277,21 +302,6 @@ void function_grad(const real_1d_array &x,
 
 //evaluates the current model on datapoints dat_z0 and dat_z1
 double evaluate(Crf_Ed&edo,
-        vector<Data_Element>& dat_z0,vector<Data_Element>& dat_z1);
-
-//report function that is passed to optimization routine. logs current model
-//accuracy, validation accuracy, and objective function every iteration
-void function_report(const real_1d_array &x,double func,void *ptr){
-    double acc = evaluate(_edo,_dat_zv0,_dat_zv1);
-    cerr<<"["<<_epoch<<","<<_iteration<<","<<acc<<","<<_trainacc<<","<<
-        func<<"],"<<endl;
-    _log<<"["<<_epoch<<","<<_iteration<<","<<acc<<","<<_trainacc<<","<<
-        func<<"],"<<endl;
-    _iteration++;
-}
-
-//evaluates the current model on datapoints dat_z0 and dat_z1
-double evaluate(Crf_Ed&edo,
         vector<Data_Element>& dat_z0,vector<Data_Element>& dat_z1){
     double correct=0;
     double total=0;
@@ -320,6 +330,18 @@ double evaluate(Crf_Ed&edo,
     cerr<<conf[2]<<" "<<conf[3]<<endl;
     return correct/total;
 }
+
+//report function that is passed to optimization routine. logs current model
+//accuracy, validation accuracy, and objective function every iteration
+void function_report(const real_1d_array &x,double func,void *ptr){
+    double acc = evaluate(_edo,_dat_zv0,_dat_zv1);
+    cerr<<"["<<_epoch<<","<<_iteration<<","<<acc<<","<<_trainacc<<","<<
+        func<<"],"<<endl;
+    _log<<"["<<_epoch<<","<<_iteration<<","<<acc<<","<<_trainacc<<","<<
+        func<<"],"<<endl;
+    _iteration++;
+}
+
 
 int main(int argc,char* argv[]){
     setOptions(argc,argv);
