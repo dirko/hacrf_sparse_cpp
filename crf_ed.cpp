@@ -1,3 +1,13 @@
+// File: crf_ed.cpp
+// Date: 21 August 2013
+// Author: Dirko Coetsee
+//
+// Classes to do inference and find the derivative of HACRF model.
+// TODO: Move feature extraction to outside program.
+//       Allow feature weights.
+//       Whole Crf_Ed class should be rewritten to use more efficient 
+//       sparse matrix routines.
+//
 #include "crf_ed.h"
 #include <math.h>
 #include <vector>

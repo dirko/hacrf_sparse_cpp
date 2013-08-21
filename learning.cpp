@@ -1,3 +1,13 @@
+// File : learning.cpp
+// Author: Dirko Coetsee
+// Date: 21 August 2013
+// 
+// Main entry point for Hidden Alignment Conditional Random Field software.
+// Exposes command-line interface to train, test, and use HACRF models to score
+// input sequences.
+// 
+// TODO: Contains globals that should be moved to be moved to a Learning class.
+//       
 #include "crf_ed.h"
 #include <stdlib.h>
 #include <fstream>
@@ -131,16 +141,16 @@ void save_parameters(Crf_Ed& edo,string filename){
 
 //write options to file
 void log_options(){
-    _log<<"inputfileM"<< _inputfileM<<endl;
-    _log<<"inputfileN"<< _inputfileN<<endl;
-    _log<<"valfileM"<< _valfileM<<endl;
-    _log<<"valfileN"<< _valfileN<<endl;
-    _log<<"featurefile"<< _featurefile<<endl;
-    _log<<"logfile"<< _logfile<<endl;
-    _log<<"parameterfile"<< _parameterfile<<endl;
-    _log<<"lambdaparameter"<< _lambdaparameter<<endl;
-    _log<<"maxdataelements"<< _maxdataelements<<endl;
-    _log<<"numepochs"<< _numepochs<<endl;
+    _log<<"inputfileM: "<< _inputfileM<<endl;
+    _log<<"inputfileN: "<< _inputfileN<<endl;
+    _log<<"valfileM: "<< _valfileM<<endl;
+    _log<<"valfileN: "<< _valfileN<<endl;
+    _log<<"featurefile: "<< _featurefile<<endl;
+    _log<<"logfile: "<< _logfile<<endl;
+    _log<<"parameterfile: "<< _parameterfile<<endl;
+    _log<<"lambdaparameter: "<< _lambdaparameter<<endl;
+    _log<<"maxdataelements: "<< _maxdataelements<<endl;
+    _log<<"numepochs: "<< _numepochs<<endl;
 }
 
 //prints usage

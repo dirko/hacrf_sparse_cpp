@@ -1,3 +1,9 @@
+// File: crf_ed.h
+// Author: Dirko Coetsee
+// Date: 21 August 2013
+//
+// See crf_ed.cpp
+//
 #include <vector>
 #include <iostream>
 #include <string>

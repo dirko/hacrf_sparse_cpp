@@ -2,6 +2,7 @@ CC=g++
 CFLAGS=-c -Wall -O3
 LFLAGS=-Wall -Wno-unused -Wno-sign-compare -Wno-char-subscripts 
 LDFLAGS=
+
 learning:learning.o crf_ed.o 
 	$(CC) $(LFLAGS) learning.o alglib/src/*.cpp crf_ed.o -o learning
 
