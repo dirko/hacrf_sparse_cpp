@@ -13,7 +13,7 @@ by McCallum, Bellare, and Pereira, and the report
 
 Install
 -------
-The optimisation library libbfgs (https://github.com/chokkan/liblbfgs) is necessary to compile this project.
+The optimisation library liblbfgs (https://github.com/chokkan/liblbfgs) is necessary to compile this project.
 
 Example
 -------
