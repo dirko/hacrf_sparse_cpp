@@ -18,15 +18,9 @@
 #include <unistd.h>
 #include "alglib/src/stdafx.h"
 #include "alglib/src/optimization.h"
+#include <lbfgs.h>
 
 using namespace std;
-using alglib::real_1d_array;
-using alglib::minlbfgsstate;
-using alglib::minlbfgscreate;
-using alglib::minlbfgsreport;
-using alglib::minlbfgssetcond;
-using alglib::minlbfgsoptimize;
-using alglib::minlbfgsresults;
 
 string _inputfileM;
 string _inputfileN;
@@ -249,8 +243,8 @@ void setOptions(int argc,char* argv[]){
                     
 //the function that is passed to optimization routine. calculate opjective
 //function (negative log-likelihood) and its derivative
-void function_grad(const real_1d_array &x,
-        double &func,real_1d_array &grad,void *ptr){
+lbfgsfloatval_t function_grad(void *instance, const lbfgsfloatval_t *x,
+        lbfgsfloatval_t *grad, const int n, const lbfgsfloatval_t step){
     Crf_Ed edo=_edo;
     vector<Data_Element> dat_z0=_dat_z0;
     vector<Data_Element> dat_z1=_dat_z1;
@@ -306,8 +300,9 @@ void function_grad(const real_1d_array &x,
     _ll=ll;
     _trainacc=correct/total;
     _edo=edo;
-    func=-(double)ll+(double)penalty;
+    double func=-(double)ll+(double)penalty;
     _epoch++;
+    return func;
 }
 
 //evaluates the current model on datapoints dat_z0 and dat_z1
@@ -343,17 +338,31 @@ double evaluate(Crf_Ed&edo,
 
 //report function that is passed to optimization routine. logs current model
 //accuracy, validation accuracy, and objective function every iteration
-void function_report(const real_1d_array &x,double func,void *ptr){
+static int function_report( 
+        void *instance,
+        const lbfgsfloatval_t *x,
+        const lbfgsfloatval_t *g,
+        const lbfgsfloatval_t fx,
+        const lbfgsfloatval_t xnorm,
+        const lbfgsfloatval_t gnorm,
+        const lbfgsfloatval_t step,
+        int n,
+        int k,
+        int ls
+    ){
+         
     double acc = evaluate(_edo,_dat_zv0,_dat_zv1);
     cerr<<"["<<_epoch<<","<<_iteration<<","<<acc<<","<<_trainacc<<","<<
-        func<<"],"<<endl;
+        fx<<"],"<<endl;
     _log<<"["<<_epoch<<","<<_iteration<<","<<acc<<","<<_trainacc<<","<<
-        func<<"],"<<endl;
+        fx<<"],"<<endl;
     _iteration++;
+    return 0;
 }
 
 
 int main(int argc,char* argv[]){
+
     setOptions(argc,argv);
     log_options();
     vector<vector<string> > raw_data_X0;
@@ -416,14 +425,15 @@ int main(int argc,char* argv[]){
         _dat_z1 = data_X1;
         _dat_zv0 = data_Xv0;
         _dat_zv1 = data_Xv1;
-        real_1d_array x0;
+        //real_1d_array x0;
         int as=0;
         for (int i=0;i<(int)edo.get_params()->size();i++){
             if (!isinf(-(*edo.get_params())[i])){
                 as++;
             }
         }
-        x0.setlength(as);
+        lbfgsfloatval_t *x0 = lbfgs_malloc(as);
+        //x0.setlength(as);
         int nas=0;
         for (int i=0;i<(int)edo.get_params()->size();i++){
             if (!isinf(-(*edo.get_params())[i])){
@@ -431,13 +441,9 @@ int main(int argc,char* argv[]){
                 nas++;
             }
         }
-        minlbfgsstate state;
-        minlbfgsreport rep;
-        minlbfgscreate(4,x0,state);
-        minlbfgssetcond(state,0.01,0.01,0.01,_numepochs);
-        minlbfgssetxrep(state, true);
-        alglib::minlbfgsoptimize(state,function_grad,function_report);
-        minlbfgsresults(state,x0,rep);
+        double fx = 0;
+        int ret = lbfgs(as, x0, &fx, function_grad, function_report, NULL, NULL);
+        cerr << "lbfgs return code: " << ret << endl;
         save_parameters(_edo,_parameterfile);
         edo = _edo;
         

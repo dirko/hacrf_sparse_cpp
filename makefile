@@ -4,7 +4,7 @@ LFLAGS=-Wall -Wno-unused -Wno-sign-compare -Wno-char-subscripts
 LDFLAGS=
 
 learning:learning.o crf_ed.o 
-	$(CC) $(LFLAGS) learning.o alglib/src/*.cpp crf_ed.o -o learning
+	$(CC) $(LFLAGS) learning.o crf_ed.o -o learning -l lbfgs
 
 learning.o:learning.cpp 
 	$(CC) $(CFLAGS) learning.cpp -o learning.o -L/
