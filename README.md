@@ -11,6 +11,10 @@ For more information on the model, please see
 by McCallum, Bellare, and Pereira, and the report
 *Conditional Random Fields for Noisy text normalisation* by Dirko Coetsee.
 
+Install
+-------
+The optimisation library liblbfgs (https://github.com/chokkan/liblbfgs) is necessary to compile this project.
+
 Example
 -------
 Currently, two classes are supported. Examples for class 1 can be
