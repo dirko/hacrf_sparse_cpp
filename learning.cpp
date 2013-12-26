@@ -16,8 +16,6 @@
 #include <iostream>
 #include <set>
 #include <unistd.h>
-//#include "alglib/src/stdafx.h"
-//#include "alglib/src/optimization.h"
 #include <lbfgs.h>
 
 using namespace std;
