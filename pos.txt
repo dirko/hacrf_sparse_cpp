@@ -14,7 +14,7 @@
 #dnt|don't#
 #wats|what's#
 #nd|and#
-#soo|so#
+#soðo|so#
 #gettin|getting#
 #thx|thanks#
 #dis|this#
